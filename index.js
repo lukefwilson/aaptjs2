@@ -89,8 +89,7 @@ async function getApkInfo(filePath) {
       versionCode: match[2],
       versionName: match[3],
       name: matchName[1],
-      icon: matchIcon[1],
-      lowResIcon: matchName[2]
+      icon: matchIcon[1] || matchName[2],
     };
     if (!info.package || !info.versionCode) {
       throw (new Error('Invalid Apk File'));
@@ -102,15 +101,18 @@ async function getApkInfo(filePath) {
   }
 }
 
-async function getApkAndIcon(filePath, outIconName, outIconPath = './') {
+async function getApkAndIcon(filePath, outIconName='icon.png', outIconPath='./') {
   try {
     if (!filePath || !outIconName) {
       throw (new Error('Invalid parameter'));
     }
     const apkInfo = await getApkInfo(filePath);
+    const outIconPath = `./${apkInfo.package}`;
     if (apkInfo.icon) {
       const { stdout } = await execFile('unzip', ['-p', filePath, apkInfo.icon], { encoding: 'buffer' });
-      await mkdir(outIconPath, { recursive: true });
+      if (!fs.existsSync(outIconPath)) {
+        await mkdir(outIconPath, { recursive: true });
+      }
       await writeFile(`${outIconPath}/${outIconName}`, stdout);
       return {
         ...apkInfo,
