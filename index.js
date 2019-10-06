@@ -92,7 +92,7 @@ async function getApkInfo(filePath) {
       icon: matchIcon[1],
       lowResIcon: matchName[2]
     };
-    if (!info.package || !info.version) {
+    if (!info.package || !info.versionCode) {
       throw (new Error('Invalid Apk File'));
     }
     return info;
