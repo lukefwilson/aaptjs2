@@ -83,11 +83,14 @@ async function getApkInfo(filePath) {
     const stdout = await dump(filePath, 'badging');
     const match = stdout.match(/name='([^']+)'[\s]*versionCode='(\d+)'[\s]*versionName='([^']+)/);
     const matchName = stdout.match(/application: label='([^']+)'[\s]*icon='([^']+)/);
+    const matchIcon = stdout.match(/application-icon-640:'([^']+)'/);
     const info = {
       package: match[1],
-      version: match[3],
+      versionCode: match[2],
+      versionName: match[3],
       name: matchName[1],
-      icon: matchName[2],
+      icon: matchIcon[1],
+      lowResIcon: matchName[2]
     };
     if (!info.package || !info.version) {
       throw (new Error('Invalid Apk File'));
