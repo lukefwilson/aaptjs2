@@ -111,9 +111,9 @@ async function getApkAndIcon(filePath, outIconName='icon.png') {
     if (apkInfo.icon && apkInfo.icon.endsWith('.png')) {
       const outIconPath = path.join(os.tmpdir(), `${apkInfo.package}_icon_v${apkInfo.versionCode}.png`);
       const { stdout } = await execFile('unzip', ['-p', filePath, apkInfo.icon], { encoding: 'buffer' });
-      if (!fs.existsSync(outIconPath)) {
-        await mkdir(outIconPath, { recursive: true });
-      }
+      // if (!fs.existsSync(outIconPath)) {
+      //   await mkdir(outIconPath, { recursive: true });
+      // }
       await writeFile(outIconPath, stdout);
       return {
         ...apkInfo,
