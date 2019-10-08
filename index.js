@@ -10,6 +10,7 @@
  */
 'use strict';
 const fs = require('fs');
+const os = require('os');
 const util = require('util');
 const path = require('path');
 const access = util.promisify(fs.access);
@@ -101,22 +102,22 @@ async function getApkInfo(filePath) {
   }
 }
 
-async function getApkAndIcon(filePath, outIconName='icon.png', outIconPath='./') {
+async function getApkAndIcon(filePath, outIconName='icon.png') {
   try {
     if (!filePath || !outIconName) {
       throw (new Error('Invalid parameter'));
     }
     const apkInfo = await getApkInfo(filePath);
-    const outIconPath = `./${apkInfo.package}`;
     if (apkInfo.icon && apkInfo.icon.endsWith('.png')) {
+      const outIconPath = path.join(os.tmpdir(), `${appInfo.package}_icon_v${apkInfo.versionCode}.png`);
       const { stdout } = await execFile('unzip', ['-p', filePath, apkInfo.icon], { encoding: 'buffer' });
       if (!fs.existsSync(outIconPath)) {
         await mkdir(outIconPath, { recursive: true });
       }
-      await writeFile(`${outIconPath}/${outIconName}`, stdout);
+      await writeFile(outIconPath, stdout);
       return {
         ...apkInfo,
-        iconPath: `${outIconPath}/${outIconName}`,
+        iconPath: outIconPath,
       };
     } else {
       return {
