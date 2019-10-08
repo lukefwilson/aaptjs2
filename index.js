@@ -22,10 +22,10 @@ async function aapt(args) {
   try {
     // darwin: macOS linux win32
     const aapt = path.join(__dirname, 'bin', process.platform, `aapt_64${process.platform === 'win32' ? '.exe' : ''}`);
-    await access(aapt, fs.constants.F_OK);
-    if (process.platform === 'linux' || process.platform === 'darwin') {
-      await chmod(aapt, '755');
-    }
+//     await access(aapt, fs.constants.F_OK);
+//     if (process.platform === 'linux' || process.platform === 'darwin') {
+//       await chmod(aapt, '755');
+//     }
     const { stdout } = await execFile(aapt, args, { maxBuffer: 10000 * 1024 });
     return stdout;
   } catch (error) {
