@@ -82,9 +82,9 @@ function version() {
 async function getApkInfo(filePath) {
   try {
     const stdout = await dump(filePath, 'badging');
-    const match = stdout.match(/name='([^']+)'[\s]*versionCode='(\d+)'[\s]*versionName='([^']+)/);
-    const matchName = stdout.match(/application: label='([^']+)'[\s]*icon='([^']+)/);
-    const matchIcon = stdout.match(/application-icon-640:'([^']+)'/);
+    const match = stdout.match(/name='([^']+)'[\s]*versionCode='(\d+)'[\s]*versionName='([^']+)/) || {};
+    const matchName = stdout.match(/application: label='([^']+)'[\s]*icon='([^']+)/) || {};
+    const matchIcon = stdout.match(/application-icon-640:'([^']+)'/) || {};
     const info = {
       package: match[1],
       versionCode: match[2],
